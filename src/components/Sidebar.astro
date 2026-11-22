@@ -1,0 +1,122 @@
+---
+import { SITE } from '../site.config';
+import { countTags, getAllEntries } from '../utils/posts';
+
+const entries = await getAllEntries();
+const recent = entries.slice(0, 5);
+const tags = countTags(entries);
+
+const links = [
+  { label: 'GitHub', href: SITE.links.github },
+  { label: 'LinkedIn', href: SITE.links.linkedin },
+  { label: 'X', href: SITE.links.x },
+].filter((link) => link.href);
+---
+
+<aside class="sidebar" aria-label="Sidebar">
+  <section class="widget">
+    <h2 class="widget-title">About</h2>
+    <p>
+      I'm {SITE.author}, a Sitecore architect and three-time Sitecore Technology MVP. I write about what I learn on
+      Sitecore projects. <a href="/about/">Read more</a>
+    </p>
+    <p class="mvp-badges">
+      {
+        [2015, 2016, 2026].map((year) => (
+          <img
+            src={`/images/sitecore-mvp-${year}.png`}
+            alt={`Sitecore Technology MVP ${year}`}
+            width="72"
+            height="72"
+            loading="lazy"
+          />
+        ))
+      }
+    </p>
+  </section>
+
+  <section class="widget">
+    <h2 class="widget-title">Recent posts</h2>
+    <ul>
+      {
+        recent.map((entry) => (
+          <li>
+            <a href={entry.href}>{entry.title}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  {
+    tags.length > 0 && (
+      <section class="widget">
+        <h2 class="widget-title">Topics</h2>
+        <ul>
+          {tags.map(({ tag, slug, count }) => (
+            <li>
+              <a href={`/tags/${slug}/`}>{tag}</a> ({count})
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+
+  <section class="widget">
+    <h2 class="widget-title">Follow</h2>
+    <ul>
+      <li><a href="/rss.xml">RSS feed</a></li>
+      {
+        links.map((link) => (
+          <li>
+            <a href={link.href} rel="me noopener">
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</aside>
+
+<style>
+  .widget {
+    padding: 26px 28px;
+    background: #fff;
+    border: 1px solid var(--border);
+    font-size: 15px;
+    overflow-wrap: anywhere;
+  }
+
+  .widget + .widget {
+    margin-top: 30px;
+  }
+
+  .widget-title {
+    margin-bottom: 14px;
+    font-size: 1.15rem;
+  }
+
+  .widget p {
+    margin: 0;
+  }
+
+  .widget .mvp-badges {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .widget ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .widget li {
+    padding: 6px 0;
+    line-height: 1.45;
+  }
+</style>

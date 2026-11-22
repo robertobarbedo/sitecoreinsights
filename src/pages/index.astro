@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import PostList from '../components/PostList.astro';
+import { getAllEntries } from '../utils/posts';
+
+const entries = await getAllEntries();
+const latest = entries.slice(0, 10);
+---
+
+<Base>
+  <PostList entries={latest} />
+  {
+    entries.length > latest.length && (
+      <p>
+        <a href="/blog/">Older posts</a>
+      </p>
+    )
+  }
+</Base>

@@ -1,0 +1,27 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/PostList.astro';
+import { countTags, getAllEntries, tagSlug, type Entry } from '../../utils/posts';
+
+export async function getStaticPaths() {
+  const entries = await getAllEntries();
+  return countTags(entries).map(({ tag, slug }) => ({
+    params: { tag: slug },
+    props: { tag, entries: entries.filter((entry) => entry.tags.some((t) => tagSlug(t) === slug)) },
+  }));
+}
+
+interface Props {
+  tag: string;
+  entries: Entry[];
+}
+
+const { tag, entries } = Astro.props;
+---
+
+<Base title={`Posts about ${tag}`} description={`Every post about ${tag}.`}>
+  <div class="box">
+    <h1 class="archive-title"><span>Topic:</span> {tag}</h1>
+  </div>
+  <PostList entries={entries} />
+</Base>

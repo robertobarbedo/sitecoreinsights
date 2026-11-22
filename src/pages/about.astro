@@ -1,0 +1,91 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../site.config';
+
+// Keep in step with the Marketplace listings.
+const apps = [
+  ['Versions Cleanup Tool', 'See every version of a page, spot the live one and safely remove old ones.'],
+  ['Content Publish Inspector', "Find out why content isn't live: authoring, Experience Edge and the website side by side."],
+  ['Workbox', 'Everything waiting in workflow on one screen, with bulk approve and reject.'],
+  ['Content Reconciliation', 'Fix environment-specific field values after every content transfer.'],
+  ['Publishing Center', "Check whether the page you're editing is really published, then publish it without leaving Pages."],
+  ['Webhooks', 'Authoring and Experience Edge webhooks on one screen, with manual test calls.'],
+  ['Experience Edge Console', 'Manage Experience Edge webhooks, cache and content without calling the Admin API by hand.'],
+  ['Content Transfer Console', 'Move content and media between environments in one click.'],
+  ['Dictionary Editor', "A site's dictionary on one screen, with languages side by side and missing translations flagged."],
+  ['Redirects', 'Create, edit, publish and test SXA redirects for every site and language.'],
+];
+---
+
+<Base title="About" description={`About ${SITE.author} and this blog.`}>
+  <article class="box">
+    <h1 class="page-title">About</h1>
+    <div class="entry-content">
+      <p>
+        Hi, I'm {SITE.author}. I'm a Sitecore architect and a three-time Sitecore Technology MVP (2015, 2016 and
+        2026). I build
+        headless Sitecore sites with Next.js, currently at MSQDX and before that at Fishtank.
+      </p>
+      <p>
+        This blog is where I write down what I learn along the way. Most posts are technical and written for
+        developers. Some are for the people who run a Sitecore platform day to day, such as content authors and
+        marketers.
+      </p>
+
+      <p class="mvp-badges">
+        {
+          [2015, 2016, 2026].map((year) => (
+            <img
+              src={`/images/sitecore-mvp-${year}.png`}
+              alt={`Sitecore Technology MVP ${year}`}
+              width="110"
+              height="110"
+              loading="lazy"
+            />
+          ))
+        }
+      </p>
+
+      <h2>What I write about</h2>
+      <ul>
+        <li>SitecoreAI and headless development with Next.js</li>
+        <li>Building and publishing SitecoreAI Marketplace apps</li>
+        <li>Publishing, Experience Edge and content operations</li>
+        <li>Security on real projects</li>
+        <li>Integrations: webhooks, background jobs and search</li>
+      </ul>
+
+      <h2>Marketplace apps</h2>
+      <p>I've built ten apps for the SitecoreAI Marketplace. Each one fills a gap I ran into on a real project.</p>
+      <ul>
+        {
+          apps.map(([name, summary]) => (
+            <li>
+              <strong>{name}.</strong> {summary}
+            </li>
+          ))
+        }
+      </ul>
+
+      <h2>Earlier posts</h2>
+      <p>
+        Before this blog I wrote for the Fishtank blog. Those posts are listed in the <a href="/blog/">archive</a> with
+        their original dates, and each one links to the original.
+      </p>
+
+      <h2>About this site</h2>
+      <p>
+        This is a personal blog. The opinions are mine, not my employer's, and the site is not affiliated with or
+        endorsed by Sitecore. You can follow new posts through the <a href="/rss.xml">RSS feed</a>.
+      </p>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .mvp-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+</style>

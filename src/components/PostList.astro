@@ -1,0 +1,39 @@
+---
+import { SITE } from '../site.config';
+import { formatDate, type Entry } from '../utils/posts';
+
+interface Props {
+  entries: Entry[];
+}
+
+const { entries } = Astro.props;
+---
+
+{
+  entries.length === 0 ? (
+    <div class="box">
+      <p>No posts yet.</p>
+    </div>
+  ) : (
+    entries.map((entry) => (
+      <article class="box">
+        <h2 class="entry-title">
+          <a href={entry.href} rel={entry.source ? 'noopener' : undefined}>
+            {entry.title}
+          </a>
+        </h2>
+        <p class="entry-meta">
+          <time datetime={entry.date.toISOString()}>{formatDate(entry.date)}</time> by {SITE.author}
+          {entry.readingTime && <> · {entry.readingTime}</>}
+          {entry.source && <> · Published on the {entry.source} blog</>}
+        </p>
+        <div class="entry-summary">
+          <p>{entry.summary}</p>
+          <a class="read-more" href={entry.href} rel={entry.source ? 'noopener' : undefined} aria-label={`Read more: ${entry.title}`}>
+            {entry.source ? `Read on the ${entry.source} blog` : 'Read more'}
+          </a>
+        </div>
+      </article>
+    ))
+  )
+}

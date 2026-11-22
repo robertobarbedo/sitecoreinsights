@@ -1,0 +1,48 @@
+---
+import Base from '../../layouts/Base.astro';
+import { formatDate, getAllEntries, type Entry } from '../../utils/posts';
+
+const entries = await getAllEntries();
+
+// Group by year, newest year first.
+const years = new Map<number, Entry[]>();
+for (const entry of entries) {
+  const year = entry.date.getUTCFullYear();
+  years.set(year, [...(years.get(year) ?? []), entry]);
+}
+---
+
+<Base title="Archive" description="Every post, newest first.">
+  <div class="box">
+    <h1 class="page-title">Archive</h1>
+    {entries.length === 0 && <p>No posts yet.</p>}
+    {
+      [...years.entries()].map(([year, items]) => (
+        <section>
+          <h2 class="year">{year}</h2>
+          <ul class="plain-list">
+            {items.map((entry) => (
+              <li>
+                <a href={entry.href} rel={entry.source ? 'noopener' : undefined}>
+                  {entry.title}
+                </a>
+                <br />
+                <span class="date">
+                  {formatDate(entry.date)}
+                  {entry.source && <> · {entry.source} blog</>}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+</Base>
+
+<style>
+  .year {
+    margin: 0.8em 0 0.2em;
+    font-size: 1.25rem;
+  }
+</style>

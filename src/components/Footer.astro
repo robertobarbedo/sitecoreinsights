@@ -1,0 +1,30 @@
+---
+import { SITE } from '../site.config';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <p>© {year} {SITE.author} · <a href="/rss.xml">RSS</a></p>
+    <p>
+      This is a personal blog. It is not affiliated with or endorsed by Sitecore. Sitecore® is a registered trademark of
+      Sitecore Corporation A/S.
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding: 24px 0;
+    background: #fff;
+    border-top: 1px solid var(--border);
+    color: var(--text-light);
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .site-footer p {
+    margin: 0 0 4px;
+  }
+</style>

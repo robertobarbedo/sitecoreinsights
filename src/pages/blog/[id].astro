@@ -1,0 +1,96 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { SITE } from '../../site.config';
+import { formatDate, getPosts, readingTime, tagSlug, type Post } from '../../utils/posts';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post, index) => ({
+    params: { id: post.id },
+    // Posts are newest first, so "newer" is the one before.
+    props: { post, newer: posts[index - 1], older: posts[index + 1] },
+  }));
+}
+
+interface Props {
+  post: Post;
+  newer?: Post;
+  older?: Post;
+}
+
+const { post, newer, older } = Astro.props;
+const { Content } = await render(post);
+const { title, description, pubDate, updatedDate, tags } = post.data;
+---
+
+<Base title={title} description={description} article={{ pubDate, updatedDate, tags }}>
+  <article class="box">
+    <header>
+      <h1 class="entry-title entry-title--single">{title}</h1>
+      <p class="entry-meta">
+        <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time> by <a href="/about/">{SITE.author}</a> · {
+          readingTime(post.body)
+        }
+        {updatedDate && <> · Updated {formatDate(updatedDate)}</>}
+      </p>
+    </header>
+
+    <div class="entry-content">
+      <Content />
+    </div>
+
+    {
+      tags.length > 0 && (
+        <footer class="entry-footer">
+          Tags:{' '}
+          {tags.map((tag, index) => (
+            <>
+              {index > 0 && ', '}
+              <a href={`/tags/${tagSlug(tag)}/`}>{tag}</a>
+            </>
+          ))}
+        </footer>
+      )
+    }
+  </article>
+
+  <div class="box author-box">
+    <h2>About the author</h2>
+    <p>
+      {SITE.author} is a Sitecore architect and three-time Sitecore Technology MVP. <a href="/about/">More about me</a>
+    </p>
+  </div>
+
+  {
+    (newer || older) && (
+      <nav class="post-nav" aria-label="Posts">
+        <div>{older && <a href={`/blog/${older.id}/`}>← {older.data.title}</a>}</div>
+        <div class="post-nav__next">{newer && <a href={`/blog/${newer.id}/`}>{newer.data.title} →</a>}</div>
+      </nav>
+    )
+  }
+</Base>
+
+<style>
+  .author-box h2 {
+    margin-bottom: 8px;
+    font-size: 1.15rem;
+  }
+
+  .author-box p {
+    margin: 0;
+    font-size: 15px;
+  }
+
+  .post-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    font-size: 15px;
+  }
+
+  .post-nav__next {
+    text-align: right;
+  }
+</style>

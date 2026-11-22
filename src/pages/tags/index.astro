@@ -1,0 +1,24 @@
+---
+import Base from '../../layouts/Base.astro';
+import { countTags, getAllEntries } from '../../utils/posts';
+
+const tags = countTags(await getAllEntries());
+---
+
+<Base title="Topics" description="Browse the blog by topic.">
+  <div class="box">
+    <h1 class="page-title">Topics</h1>
+    <ul class="plain-list">
+      {
+        tags.map(({ tag, slug, count }) => (
+          <li>
+            <a href={`/tags/${slug}/`}>{tag}</a>{' '}
+            <span class="date">
+              ({count} {count === 1 ? 'post' : 'posts'})
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Base>
